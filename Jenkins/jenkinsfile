@@ -1,0 +1,61 @@
+pipeline {
+    agent {
+        node {
+            label 'awsvm'
+        }
+    }
+    
+     options    {
+                timestamps()
+                buildDiscarder(logRotator(numToKeepStr: '2', artifactNumToKeepStr: '2'))
+                timeout(time: 1, unit: 'HOURS')
+                disableConcurrentBuilds()
+                }
+
+    parameters {
+            string(name: 'appBranch', defaultValue: 'master', description: "Application Branch name of the Repo")
+            string(name: 'gitURL', defaultValue: 'https://github.com/pythonlifedevops/aws-b2-maven-app.git', description: "Pass the Maven Repo Source Code GIT URL")
+                }  
+
+    stages {
+        stage('Git cloning') {
+            steps 
+            {
+                
+                git branch: 'main', url: 'https://github.com/sai-kadinti/aws-maven-project.git'
+            }
+        }
+        stage('mvn build') {
+            steps {
+                sh ' mvn clean package'
+            }
+        }
+        stage('docker build') {
+            steps {
+                sh ' docker build . -f dockerfile_testapp -t kadintisai/awsmaven:latest'
+            }
+        }
+        stage('docker login') {
+            steps {
+                
+                withCredentials([usernamePassword(credentialsId: 'dockerlogin', passwordVariable: 'dockerpwd', usernameVariable: 'dockeruser')]) {
+                
+                sh 'docker login -u ${dockeruser} -p ${dockerpwd}'
+                }
+            }
+        }
+        stage('docker push') {
+            steps {
+                sh 'docker push kadintisai/awsmaven:latest'
+            }
+        }
+    }
+    post {
+        success {
+            echo 'The pipeline succeed...!!'
+        }
+        failure {
+            echo 'The pipeline failed....!!'
+        }
+    }
+}
