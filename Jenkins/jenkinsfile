@@ -32,7 +32,7 @@ pipeline {
         }
         stage('docker build') {
             steps {
-                sh ' docker build . -f dockerfile_testapp -t kadintisai/awsmaven:latest'
+                sh ' docker build . -f dockerfile_testapp -t kadintisai/awsmaven:my-push'
             }
         }
         stage('docker login') {
