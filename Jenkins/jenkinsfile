@@ -49,6 +49,11 @@ pipeline {
                 sh 'docker push kadintisai/awsmaven:latest'
             }
         }
+        stage('K8smanifest Checkout') {
+            steps {
+                git 'https://github.com/sai-kadinti/aws-k8s-cicd.git'
+            }
+        }
         stage('K8s Auto deployement') {
             steps {
                 dir('manifests')
