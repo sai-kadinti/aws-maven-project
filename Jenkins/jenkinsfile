@@ -68,7 +68,7 @@ pipeline {
         }
         stage ('Archive and clean Workspace') {
             steps {
-                archiveArtifacts artifacts: 'target/*.jar' followSymlinks: false
+                archiveArtifacts artifacts: 'target/*.jar' , followSymlinks: false
                 cleanws() 
             }
         }
