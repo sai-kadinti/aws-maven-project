@@ -49,7 +49,6 @@ pipeline {
                 sh 'docker push kadintisai/awsmaven:latest'
             }
         }
-    }
         stage('K8s Auto deployement') {
             steps {
                 dir('manifests')
@@ -66,12 +65,13 @@ pipeline {
                 }
                 
             }
-    }
-        stage('Archive and clean Workspace') {
+        }
+        stage ('Archive and clean Workspace') {
             steps {
                 archiveArtifacts artifacts: 'target/*.jar' followSymlinks: false
                 cleanws() 
             }
+        }
     }
     post {
         success {
