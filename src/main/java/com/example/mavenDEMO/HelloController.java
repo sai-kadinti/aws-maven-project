@@ -8,7 +8,7 @@ public class HelloController {
 
     @RequestMapping("/")
     public String index() {
-        return "This is sample 2 deployement";
+        return "This is sample deployment using Azure AKS";
     }
 
 }
